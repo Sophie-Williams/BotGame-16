@@ -3,33 +3,23 @@ Created on Aug 17, 2016
 
 @author: TDARSEY
 '''
-
-
-class Square:
+from copy import deepcopy
     
-    EMPTYCHAR = "-"
-    
-    def __init__(self, contents = None):
-        self.contents = contents
-        
-    def __str__(self):
-        
-        returnString = self.EMPTYCHAR
-        
-        if(self.contents):
-            returnString = self.contents
-            
-        return returnString + " "
+from piece import Block, Bot
 
-
+from enum import Direction
 
 class Board:
     def __init__(self, size=(16, 16)):
+        self.clearToSize(size) 
+        
+    def clearToSize(self, size):
         assert(len(size) == 2)
+        self._size = size
         
         self.squares = []
         
-        row = [ Square() ] * size[1]
+        row = [ None ] * size[1]
 
         for i in range(size[0]):
             self.squares.append(deepcopy(row))
@@ -37,37 +27,61 @@ class Board:
     def __getitem__(self, index):
         return self.squares.__getitem__(index)
     
-    """
-    def __setitem__(self, index, value):
-        self.squares[index] = Square(value)
-    """
-    def setSquare(self, pos, value):
-        self.squares[pos[1]][pos[0]] = Square(value)
+    def getSquare(self, pos):
+        return self.squares[pos[1]][pos[0]]
     
+    def setSquare(self, pos, piece):
+        self.squares[pos[1]][pos[0]] = piece
+        piece.pos = pos
+        piece.board = self
+        
+    def clearSquare(self, pos):
+        piece = self.squares[pos[1]][pos[0]]
+        piece.pos = None
+        piece.board = None
+        self.squares[pos[1]][pos[0]] = None
+        
+    def moveSquare(self, sourcePos, destPos):
+        piece = self.getSquare(sourcePos)
+        if not piece:
+            return
+        self.clearSquare(sourcePos)
+        self.setSquare(destPos, piece)
+    
+    def isValidPos(self, pos):
+        if(pos[0] > 0 
+           and pos[0] < self._size[0]
+           and pos[1] > 0 
+           and pos[1] < self._size[1]):
+            return True
+        return False
     
     def __str__(self):
+        
+        spacer = " "
+        emptychar = '-'
         
         returnString = ""
         
         for row in self.squares:
+            
+            returnString += "|" + spacer
             for square in row:
-                returnString += str(square)
-                
+                returnString += str(square) if square else emptychar
+                returnString += spacer
+            returnString += "|"
             returnString += "\n"
             
         return returnString
 
 
-     
 if __name__ == "__main__":
  
-    from copy import deepcopy
-    import os
-    
-    clear = lambda: os.system('cls')
- 
     myBoard = Board()
+    myBot = Bot()
+    myBoard.setSquare((1, 1), myBot)
     
-    myBoard.setSquare((5, 1), "X")
+    #myBoard.moveSquare((1, 1), (1, 2))
+    myBot.move(Direction.left)
+    
     print myBoard
-    clear()
