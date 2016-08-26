@@ -49,10 +49,10 @@ class Board:
         self.setSquare(destPos, piece)
     
     def isValidPos(self, pos):
-        if(pos[0] > 0 
-           and pos[0] < self._size[0]
-           and pos[1] > 0 
-           and pos[1] < self._size[1]):
+        if(     pos[0] >= 0 
+           and  pos[0] < self._size[0]
+           and  pos[1] >= 0 
+           and  pos[1] < self._size[1]):
             return True
         return False
     
@@ -77,11 +77,11 @@ class Board:
 
 if __name__ == "__main__":
  
-    myBoard = Board()
+    myBoard = Board((4, 4))
     myBot = Bot()
     myBoard.setSquare((1, 1), myBot)
     
     #myBoard.moveSquare((1, 1), (1, 2))
-    myBot.move(Direction.left)
+    myBot.move(Direction.up)
     
     print myBoard

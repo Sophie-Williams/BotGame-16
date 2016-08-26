@@ -4,7 +4,17 @@ Created on Aug 25, 2016
 @author: TDARSEY
 '''
 
+import logging
+
 from enum import Direction
+
+
+FORMAT = '%(asctime)-15s %(message)s'
+logging.basicConfig(format=FORMAT)
+
+logger = logging.getLogger('botgames')
+
+logger.warning('Loading: %s', 'Pieces')
 
 class aPiece(object):
     char = '?'
@@ -24,26 +34,33 @@ class Bot(aPiece):
     def move(self, direction):
         
         sourcePos = self.pos
-        
-        #"EWWWW"
-        def addDirection(a, b):
-            return tuple([sum(x) for x in zip(a,b)])
-        
+
+
         if direction == Direction.up:
-            destPos = addDirection(sourcePos, (0, -1))
+            destPos = self.moveOffset(sourcePos, (0, -1))
         
         if direction == Direction.left:
-            destPos = addDirection(sourcePos, (-1, 0))
+            destPos = self.moveOffset(sourcePos, (-1, 0))
         
         if direction == Direction.down:
-            destPos = addDirection(sourcePos, (0, 1))
+            destPos = self.moveOffset(sourcePos, (0, 1))
         
         if direction == Direction.right:
-            destPos = addDirection(sourcePos, (1, 0))
+            destPos = self.moveOffset(sourcePos, (1, 0))
             
+
+  
+
+    def moveOffset(self, sourcePos, offset):
+        destPos = tuple([sum(x) for x in zip(sourcePos,offset)])
+
+
+
         if self.board.isValidPos(destPos):
-            self.board.moveSquare(sourcePos, destPos)
-        
+            logger.warning(destPos)
+            self.board.moveSquare(sourcePos, destPos)  
+        else:
+            logger.warning('Attempted invalid move: %s to %s.', sourcePos, destPos)    
     
 class Food(aPiece):
     char = "%"

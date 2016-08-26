@@ -6,13 +6,16 @@ Created on Aug 23, 2016
 
 import util
 
-from Board.board import Board, Square
+from Board.board import Board
+from Board.piece import Bot
 
 import random
 
 import time
 
 myBoard = Board()
+myBot = Bot()
+myBoard.setSquare((1, 1), myBot)
 
 def tick():
     #char = random.sample(set(["X", "O", " "]), 1)[0]
@@ -25,5 +28,3 @@ def tick():
 while(True):
     tick()
     time.sleep(0.06)
-
-print myBoard
