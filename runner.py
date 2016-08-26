@@ -30,21 +30,26 @@ flipint = 500
 def flip():
     util.clear()
     print myBoard
-
+    
+    
 def tick():
     
     if(random.randint(0, 100) == 50):
         myBoard.setSquare((
-                               random.randint(0, myBoard._size[0] - 1), 
-                               random.randint(0, myBoard._size[1] - 1)), 
-                            Food())
+               random.randint(0, myBoard._size[0] - 1), 
+               random.randint(0, myBoard._size[1] - 1)), 
+            Food())
     myBot.move(random.choice(directions))
+    
+    if(not myBot.board):
+        exit()
     
 while(True):
     clock += 1
     tick()
-    
+
     if(clock % flipint == 0):
         flip()
-
+        print myBot.pos
+        
     #time.sleep(0.03)

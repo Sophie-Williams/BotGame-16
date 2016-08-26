@@ -36,35 +36,48 @@ class Board:
         return self.squares[pos[1]][pos[0]]
     
     def setSquare(self, pos, piece):
-        try:
+        if(self.isValidPos(pos)):
+            piece.pos = pos
+            piece.board = self
             self.squares[pos[1]][pos[0]] = piece
-        except IndexError:
-            logger.error('Invalid Set: %s at %s', piece, pos)
+            #logger.error('Spawned %s at %s', repr(piece), pos)
+        else:
+            logger.error('Attempt to set invalid square : %s at %s', repr(piece), pos)
             exit()
             
-        piece.pos = pos
-        piece.board = self
-        
     def clearSquare(self, pos):
         piece = self.squares[pos[1]][pos[0]]
-        piece.pos = None
-        piece.board = None
+        if piece:
+            piece.pos = None
+            piece.board = None
         self.squares[pos[1]][pos[0]] = None
         
     def moveSquare(self, sourcePos, destPos):
         piece = self.getSquare(sourcePos)
         if not piece:
             return
+
         self.clearSquare(sourcePos)
         self.setSquare(destPos, piece)
     
     def isValidPos(self, pos):
-        if(     pos[0] >= 0 
-           and  pos[0] < self._size[0]
-           and  pos[1] >= 0 
-           and  pos[1] < self._size[1]):
-            return True
-        return False
+        
+        #Invalid if out of the board's range
+        if(    pos[0] <  0 
+           or  pos[0] >= self._size[0]
+           or  pos[1] <  0 
+           or  pos[1] >= self._size[1]):
+            #logger.warning('Invalid pos: %s to %s', self, pos)
+            return False
+        
+        #Invalid if a nonconsumable piece is present
+        currentPieceIfAny = self.getSquare(pos)
+        if currentPieceIfAny and (not currentPieceIfAny.consumable):
+            #logger.warning('Invalid pos - Occupied Square: %s to %s', self, pos)
+            return False
+        
+        #Valid
+        return True
     
     def __str__(self):
         

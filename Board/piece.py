@@ -14,10 +14,9 @@ logging.basicConfig(format=FORMAT)
 
 logger = logging.getLogger('botgames')
 
-logger.warning('Loading: %s', 'Pieces')
-
 class aPiece(object):
     char = '?'
+    consumable = False
     def __init__(self, board = None, pos = None):
         self.board = board
         self.pos = pos
@@ -34,7 +33,6 @@ class Bot(aPiece):
     def move(self, direction):
         
         sourcePos = self.pos
-
 
         if direction == Direction.up:
             destPos = self.moveOffset(sourcePos, (0, -1))
@@ -56,7 +54,9 @@ class Bot(aPiece):
             #logger.warning(destPos)
             self.board.moveSquare(sourcePos, destPos)  
         else:
-            logger.warning('Attempted invalid move: %s to %s.', sourcePos, destPos)    
+            pass
+            #logger.warning('Attempted invalid move: %s to %s.', sourcePos, destPos)    
     
 class Food(aPiece):
     char = "%"
+    consumable = True
