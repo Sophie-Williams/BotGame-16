@@ -3,11 +3,16 @@ Created on Aug 17, 2016
 
 @author: TDARSEY
 '''
+
+import logging
+
 from copy import deepcopy
     
-from piece import Block, Bot
+from piece import Block, Food, Bot
 
 from enum import Direction
+
+logger = logging.getLogger('botgames')
 
 class Board:
     def __init__(self, size=(16, 16)):
@@ -31,7 +36,12 @@ class Board:
         return self.squares[pos[1]][pos[0]]
     
     def setSquare(self, pos, piece):
-        self.squares[pos[1]][pos[0]] = piece
+        try:
+            self.squares[pos[1]][pos[0]] = piece
+        except IndexError:
+            logger.error('Invalid Set: %s at %s', piece, pos)
+            exit()
+            
         piece.pos = pos
         piece.board = self
         
@@ -59,7 +69,7 @@ class Board:
     def __str__(self):
         
         spacer = " "
-        emptychar = '-'
+        emptychar = ' '
         
         returnString = ""
         

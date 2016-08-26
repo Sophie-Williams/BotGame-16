@@ -47,17 +47,13 @@ class Bot(aPiece):
         
         if direction == Direction.right:
             destPos = self.moveOffset(sourcePos, (1, 0))
-            
 
-  
 
     def moveOffset(self, sourcePos, offset):
         destPos = tuple([sum(x) for x in zip(sourcePos,offset)])
 
-
-
         if self.board.isValidPos(destPos):
-            logger.warning(destPos)
+            #logger.warning(destPos)
             self.board.moveSquare(sourcePos, destPos)  
         else:
             logger.warning('Attempted invalid move: %s to %s.', sourcePos, destPos)    
