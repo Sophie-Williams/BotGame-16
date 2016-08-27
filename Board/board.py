@@ -43,7 +43,7 @@ class Board:
             #logger.error('Spawned %s at %s', repr(piece), pos)
         else:
             logger.error('Attempt to set invalid square : %s at %s', repr(piece), pos)
-            exit()
+            #exit()
             
     def clearSquare(self, pos):
         piece = self.squares[pos[1]][pos[0]]
