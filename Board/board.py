@@ -3,14 +3,13 @@ Created on Aug 17, 2016
 
 @author: TDARSEY
 '''
-
 import logging
-
+import random
 from copy import deepcopy
     
 from piece import Block, Food, Bot
-
 from enum import Direction
+
 
 logger = logging.getLogger('botgames')
 
@@ -43,7 +42,7 @@ class Board:
             #logger.error('Spawned %s at %s', repr(piece), pos)
         else:
             logger.error('Attempt to set invalid square : %s at %s', repr(piece), pos)
-            exit()
+            #exit()
             
     def clearSquare(self, pos):
         piece = self.squares[pos[1]][pos[0]]
@@ -62,6 +61,9 @@ class Board:
     
     def isValidPos(self, pos):
         
+        if not pos:
+            return False
+        
         #Invalid if out of the board's range
         if(    pos[0] <  0 
            or  pos[0] >= self._size[0]
@@ -78,6 +80,15 @@ class Board:
         
         #Valid
         return True
+    
+    def getRandomValidPosition(self):
+        pos = None
+        while not self.isValidPos(pos):
+            pos = (
+                   random.randint(0, self._size[0] - 1),
+                   random.randint(0, self._size[1] - 1)
+                )
+        return pos
     
     def __str__(self):
         
