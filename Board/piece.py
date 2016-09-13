@@ -34,30 +34,41 @@ class Bot(aPiece):
     char = "O"
     
     def __init__(self):
-        health = 0
+        self.health = 1
     
     def move(self, direction):
         
         sourcePos = self.pos
 
         if direction == Direction.up:
-            destPos = self.moveOffset(sourcePos, (0, -1))
+            self._moveOffset(sourcePos, (0, -1))
         
         if direction == Direction.left:
-            destPos = self.moveOffset(sourcePos, (-1, 0))
+            self._moveOffset(sourcePos, (-1, 0))
         
         if direction == Direction.down:
-            destPos = self.moveOffset(sourcePos, (0, 1))
+            self._moveOffset(sourcePos, (0, 1))
         
         if direction == Direction.right:
-            destPos = self.moveOffset(sourcePos, (1, 0))
+            self._moveOffset(sourcePos, (1, 0))
 
 
-    def moveOffset(self, sourcePos, offset):
+    def _moveOffset(self, sourcePos, offset):
         destPos = tuple([sum(x) for x in zip(sourcePos,offset)])
 
+      
+
         if self.board.isValidPos(destPos):
-            #logger.warning(destPos)
+            
+            #Eat
+            if(self.board 
+                and self.board.getSquare(destPos) 
+                and self.board.getSquare(destPos).__class__.__name__ == "Food"
+               ):
+                food = self.board.getSquare(destPos)
+                self._eat(food)
+            
+            #Move
             self.board.moveSquare(sourcePos, destPos)  
         else:
             pass
@@ -66,9 +77,22 @@ class Bot(aPiece):
     def onConsume(self):
         self.health += 100
     
+    def tick(self):
+        self.health -= 0.01
+        if(self.health <= 0):
+            if(self.board):
+                self.board.clearSquare(self.pos)
+            del self
+        else:
+            self.onTick()
+        
+    
         #Override
     def onTick(self):
         pass
+    
+    def _eat(self, food):
+        self.health += 1
     
     
 class RandoBot(Bot):

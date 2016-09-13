@@ -28,14 +28,14 @@ class GameWorld:
         
         self.clock += 1
         
-        if(random.randint(0, 100) == 50):
+        if(random.randint(0, 50) == 25):
             self.board.setSquare((
                    random.randint(0, self.board._size[0] - 1), 
                    random.randint(0, self.board._size[1] - 1)), 
                 Food())
         
         for bot in self.bots:
-            bot.onTick()
+            bot.tick()
         
         #if(not myBot.board):
         #    exit()
